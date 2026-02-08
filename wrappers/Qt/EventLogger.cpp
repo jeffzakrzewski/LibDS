@@ -276,7 +276,7 @@ void DSEventLogger::saveDataLoop()
 void DSEventLogger::onCANUsageChanged(int usage)
 {
    Q_UNUSED(usage);
-   m_canUsageLog.append(qMakePair<qint64, int>(currentTime(), usage));
+   m_canUsageLog.append(std::make_pair(currentTime(), usage));
 }
 
 /**
@@ -285,7 +285,7 @@ void DSEventLogger::onCANUsageChanged(int usage)
 void DSEventLogger::onCPUUsageChanged(int usage)
 {
    Q_UNUSED(usage);
-   m_cpuUsageLog.append(qMakePair<qint64, int>(currentTime(), usage));
+   m_cpuUsageLog.append(std::make_pair(currentTime(), usage));
 }
 
 /**
@@ -294,7 +294,7 @@ void DSEventLogger::onCPUUsageChanged(int usage)
 void DSEventLogger::onRAMUsageChanged(int usage)
 {
    Q_UNUSED(usage);
-   m_ramUsageLog.append(qMakePair<qint64, int>(currentTime(), usage));
+   m_ramUsageLog.append(std::make_pair(currentTime(), usage));
 }
 
 /**
@@ -303,7 +303,7 @@ void DSEventLogger::onRAMUsageChanged(int usage)
 void DSEventLogger::onNewMessage(QString message)
 {
    Q_UNUSED(message);
-   m_messagesLog.append(qMakePair<qint64, QString>(currentTime(), message));
+   m_messagesLog.append(std::make_pair(currentTime(), message));
 }
 
 /**
@@ -312,7 +312,7 @@ void DSEventLogger::onNewMessage(QString message)
 void DSEventLogger::onDiskUsageChanged(int usage)
 {
    Q_UNUSED(usage);
-   m_diskUsageLog.append(qMakePair<qint64, int>(currentTime(), usage));
+   m_diskUsageLog.append(std::make_pair(currentTime(), usage));
 }
 
 /**
@@ -321,7 +321,7 @@ void DSEventLogger::onDiskUsageChanged(int usage)
 void DSEventLogger::onEnabledChanged(bool enabled)
 {
    LOG << "Robot enabled state set to" << enabled;
-   m_enabledLog.append(qMakePair<qint64, bool>(currentTime(), enabled));
+   m_enabledLog.append(std::make_pair(currentTime(), enabled));
 }
 
 /**
@@ -338,7 +338,7 @@ void DSEventLogger::onTeamNumberChanged(int number)
 void DSEventLogger::onVoltageChanged(float voltage)
 {
    Q_UNUSED(voltage);
-   m_voltageLog.append(qMakePair<qint64, float>(currentTime(), voltage));
+   m_voltageLog.append(std::make_pair(currentTime(), voltage));
 }
 
 /**
@@ -347,7 +347,7 @@ void DSEventLogger::onVoltageChanged(float voltage)
 void DSEventLogger::onRobotCodeChanged(bool robotCode)
 {
    LOG << "Robot code status set to" << robotCode;
-   m_robotCodeLog.append(qMakePair<qint64, bool>(currentTime(), robotCode));
+   m_robotCodeLog.append(std::make_pair(currentTime(), robotCode));
 }
 
 /**
@@ -356,7 +356,7 @@ void DSEventLogger::onRobotCodeChanged(bool robotCode)
 void DSEventLogger::onFMSCommunicationsChanged(bool connected)
 {
    LOG << "FMS communications set to" << connected;
-   m_fmsCommsLog.append(qMakePair<qint64, bool>(currentTime(), connected));
+   m_fmsCommsLog.append(std::make_pair(currentTime(), connected));
 }
 
 /**
@@ -365,7 +365,7 @@ void DSEventLogger::onFMSCommunicationsChanged(bool connected)
 void DSEventLogger::onRadioCommunicationsChanged(bool connected)
 {
    LOG << "Radio communications set to" << connected;
-   m_radioCommsLog.append(qMakePair<qint64, bool>(currentTime(), connected));
+   m_radioCommsLog.append(std::make_pair(currentTime(), connected));
 }
 
 /**
@@ -374,7 +374,7 @@ void DSEventLogger::onRadioCommunicationsChanged(bool connected)
 void DSEventLogger::onRobotCommunicationsChanged(bool connected)
 {
    LOG << "Robot communications set to" << connected;
-   m_robotCommsLog.append(qMakePair<qint64, bool>(currentTime(), connected));
+   m_robotCommsLog.append(std::make_pair(currentTime(), connected));
 }
 
 /**
@@ -383,7 +383,7 @@ void DSEventLogger::onRobotCommunicationsChanged(bool connected)
 void DSEventLogger::onEmergencyStoppedChanged(bool emergencyStopped)
 {
    LOG << "ESTOP set to" << emergencyStopped;
-   m_emergencyStopLog.append(qMakePair<qint64, bool>(currentTime(), emergencyStopped));
+   m_emergencyStopLog.append(std::make_pair(currentTime(), emergencyStopped));
 }
 
 /**
@@ -392,7 +392,7 @@ void DSEventLogger::onEmergencyStoppedChanged(bool emergencyStopped)
 void DSEventLogger::onControlModeChanged(DriverStation::Control mode)
 {
    LOG << "Robot control mode set to" << mode;
-   m_controlModeLog.append(qMakePair<qint64, int>(currentTime(), (int)mode));
+   m_controlModeLog.append(std::make_pair(currentTime(), (int)mode));
 }
 
 /**
