@@ -73,6 +73,9 @@ extern int DS_GetRobotCommunications(void);
 extern int DS_GetRobotCANUtilization(void);
 extern DS_ControlMode DS_GetControlMode(void);
 extern float DS_GetMaximumBatteryVoltage(void);
+extern int DS_GetRobotBrownout(void);
+extern int DS_GetMatchNumber(void);
+extern float DS_GetMatchTime(void);
 
 /* Setters */
 extern void DS_RebootRobot(void);

@@ -71,6 +71,10 @@ extern int CFG_GetFMSCommunications(void);
 extern int CFG_GetRadioCommunications(void);
 extern int CFG_GetRobotCommunications(void);
 extern DS_ControlMode CFG_GetControlMode(void);
+extern int CFG_GetRobotBrownout(void);
+extern int CFG_GetMatchNumber(void);
+extern float CFG_GetMatchTime(void);
+extern int CFG_GetTournamentLevel(void);
 
 /* Setters */
 extern void CFG_SetRobotCode(const int code);
@@ -89,6 +93,10 @@ extern void CFG_SetControlMode(const DS_ControlMode mode);
 extern void CFG_SetFMSCommunications(const int communications);
 extern void CFG_SetRadioCommunications(const int communications);
 extern void CFG_SetRobotCommunications(const int communications);
+extern void CFG_SetRobotBrownout(const int brownout);
+extern void CFG_SetMatchNumber(const int number);
+extern void CFG_SetMatchTime(const float time);
+extern void CFG_SetTournamentLevel(const int level);
 
 /* Watchdog functions */
 extern void CFG_FMSWatchdogExpired(void);

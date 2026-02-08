@@ -55,6 +55,9 @@ typedef enum
    DS_ROBOT_STATION_CHANGED = 0x16,
    DS_ROBOT_ESTOP_CHANGED = 0x17,
    DS_STATUS_STRING_CHANGED = 0x18,
+   DS_ROBOT_BROWNOUT_CHANGED = 0x19,
+   DS_MATCH_NUMBER_CHANGED = 0x1a,
+   DS_MATCH_TIME_CHANGED = 0x1b,
 } DS_EventType;
 
 /**
@@ -89,6 +92,9 @@ typedef struct
    int estopped;
    int connected;
    int disk_usage;
+   int brownout;
+   int match_number;
+   float match_time;
    float voltage;
    DS_ControlMode mode;
 } DS_RobotEvent;

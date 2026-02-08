@@ -78,6 +78,9 @@ class DriverStation : public QObject
    Q_PROPERTY(bool isAutonomous READ isAutonomous NOTIFY controlModeChanged)
    Q_PROPERTY(bool isTeleoperated READ isTeleoperated NOTIFY controlModeChanged)
    Q_PROPERTY(bool canBeEnabled READ canBeEnabled)
+   Q_PROPERTY(bool robotBrownout READ robotBrownout NOTIFY brownoutChanged)
+   Q_PROPERTY(int matchNumber READ matchNumber NOTIFY matchNumberChanged)
+   Q_PROPERTY(float matchTime READ matchTime NOTIFY matchTimeChanged)
    Q_PROPERTY(QString gameData READ gameData WRITE setGameData NOTIFY gameDataChanged)
 
 public:
@@ -93,6 +96,7 @@ public:
 
    enum Protocol
    {
+      Protocol2026,
       Protocol2020,
       Protocol2016,
       Protocol2015,
@@ -159,6 +163,9 @@ public:
    bool connectedToRadio() const;
    bool connectedToRobot() const;
    bool emergencyStopped() const;
+   bool robotBrownout() const;
+   int matchNumber() const;
+   float matchTime() const;
 
    qreal voltage() const;
    QString voltageString() const;
@@ -259,6 +266,9 @@ signals:
    void radioCommunicationsChanged(const bool connected);
    void robotCommunicationsChanged(const bool connected);
    void emergencyStoppedChanged(const bool emergencyStopped);
+   void brownoutChanged(const bool brownout);
+   void matchNumberChanged(const int number);
+   void matchTimeChanged(const float time);
 
 private:
    QElapsedTimer m_timer;

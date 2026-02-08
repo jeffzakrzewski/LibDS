@@ -47,6 +47,10 @@ static int emergency_stopped = -1;
 static int fms_communications = -1;
 static int radio_communications = -1;
 static int robot_communications = -1;
+static int robot_brownout = -1;
+static int match_number = 0;
+static float match_time = 0;
+static int tournament_level = 0;
 static DS_Position robot_position = DS_POSITION_1;
 static DS_Alliance robot_alliance = DS_ALLIANCE_RED;
 static DS_ControlMode control_mode = DS_CONTROL_TELEOPERATED;
@@ -96,6 +100,9 @@ static void create_robot_event(const DS_EventType type)
    event.robot.disk_usage = CFG_GetRobotDiskUsage();
    event.robot.estopped = CFG_GetEmergencyStopped();
    event.robot.connected = CFG_GetRobotCommunications();
+   event.robot.brownout = CFG_GetRobotBrownout();
+   event.robot.match_number = CFG_GetMatchNumber();
+   event.robot.match_time = CFG_GetMatchTime();
 
    DS_AddEvent(&event);
 }
@@ -524,6 +531,83 @@ void CFG_SetRobotCommunications(const int communications)
 }
 
 /**
+ * Returns \c 1 if the robot is in a brownout condition
+ */
+int CFG_GetRobotBrownout(void)
+{
+   return robot_brownout == 1;
+}
+
+/**
+ * Returns the current match number from FMS
+ */
+int CFG_GetMatchNumber(void)
+{
+   return DS_Max(match_number, 0);
+}
+
+/**
+ * Returns the remaining match time in seconds
+ */
+float CFG_GetMatchTime(void)
+{
+   return match_time > 0 ? match_time : 0;
+}
+
+/**
+ * Returns the current tournament level from FMS
+ */
+int CFG_GetTournamentLevel(void)
+{
+   return tournament_level;
+}
+
+/**
+ * Updates the brownout state of the robot
+ */
+void CFG_SetRobotBrownout(const int brownout)
+{
+   if (robot_brownout != to_boolean(brownout))
+   {
+      robot_brownout = to_boolean(brownout);
+      create_robot_event(DS_ROBOT_BROWNOUT_CHANGED);
+      create_robot_event(DS_STATUS_STRING_CHANGED);
+   }
+}
+
+/**
+ * Updates the match number from FMS
+ */
+void CFG_SetMatchNumber(const int number)
+{
+   if (match_number != number)
+   {
+      match_number = number;
+      create_robot_event(DS_MATCH_NUMBER_CHANGED);
+   }
+}
+
+/**
+ * Updates the remaining match time
+ */
+void CFG_SetMatchTime(const float time)
+{
+   if (match_time != time)
+   {
+      match_time = time;
+      create_robot_event(DS_MATCH_TIME_CHANGED);
+   }
+}
+
+/**
+ * Updates the tournament level from FMS
+ */
+void CFG_SetTournamentLevel(const int level)
+{
+   tournament_level = level;
+}
+
+/**
  * Called when the FMS watchdog expires
  */
 void CFG_FMSWatchdogExpired(void)
@@ -554,6 +638,7 @@ void CFG_RobotWatchdogExpired(void)
    CFG_SetRobotRAMUsage(0);
    CFG_SetRobotDiskUsage(0);
    CFG_SetEmergencyStopped(0);
+   CFG_SetRobotBrownout(0);
    CFG_SetRobotCommunications(0);
 
    /* Force the sockets to perform another lookup */

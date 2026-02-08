@@ -51,12 +51,12 @@ int main() {
    VoodooInit();
    HeavyWizardry();
    
-   /* Load the 2016 protocol, the protocol can be safely changed during runtime. 
+   /* Load the 2026 protocol, the protocol can be safely changed during runtime.
     *
-    * Also, the LibDS can operate safely without a loaded protocol, 
-    * so there is no rush to call this function. 
+    * Also, the LibDS can operate safely without a loaded protocol,
+    * so there is no rush to call this function.
     */
-   DS_ConfigureProtocol (DS_GetProtocolFRC_2016());
+   DS_ConfigureProtocol (DS_GetProtocolFRC_2026());
 }
 ```
 
@@ -85,9 +85,15 @@ The LibDS has built-in support for the following protocols:
 - FRC 2009-2014
 - FRC 2015
 - FRC 2016 (same as 2015, but with different robot address)
-- FRC 2020 (in development)
+- FRC 2020
+- FRC 2026 (recommended - includes bug fixes and TCP support)
 
-To load a protocol, use the `DS_ConfigureProtocol()` function. As a final note, you can also implement your own protocols and instruct the LibDS to use it. 
+The FRC 2026 protocol inherits from FRC 2020 and adds:
+- **Bug fixes**: correct voltage decoding (/256), signed joystick axis encoding, dynamic button byte count, DS_CONNECTED flag in request byte, actual system time in timezone data
+- **Protocol accuracy**: brownout detection, FMS match data parsing (match number, tournament level, remaining time), robot port switching when FMS is connected (1110 vs 1115), updated FMS receive port (1121), countdown timer tag
+- **TCP channel** (port 1740): sends joystick descriptors, match info, and game data to the robot; receives version info, error messages, and stdout output via the NetConsole event system
+
+To load a protocol, use the `DS_ConfigureProtocol()` function. As a final note, you can also implement your own protocols and instruct the LibDS to use it.
 
 
 #### Interacting with the DS events
@@ -98,12 +104,14 @@ The easiest way to react to the DS events is the following (pseudo-code):
 
 ```c
 DS_Event event;
-while (DS_PollEvent (event)) {
+while (DS_PollEvent (&event)) {
    switch (event.type) {
-      case DS_EVENT_X:
-         // react to x event
-      case DS_EVENT_Y:
-         // react to y event
+      case DS_ROBOT_VOLTAGE_CHANGED:
+         // react to voltage change
+         break;
+      case DS_ROBOT_COMMS_CHANGED:
+         // react to comms change
+         break;
    }
 }
 ```
@@ -118,13 +126,13 @@ static void process_events();
 
 int main() {
    DS_Init();
-   DS_ConfigureProtocol (DS_GetProtocolFRC_2016());
-   
+   DS_ConfigureProtocol (DS_GetProtocolFRC_2026());
+
    while (1) {
       process_events();
       DS_Sleep (10);
    }
-   
+
    return EXIT_SUCCESS;
 }
 
@@ -132,20 +140,23 @@ void process_events() {
    DS_Event event;
    while (DS_PollEvent (&event)) {
       switch (event.type) {
-      case DS_ROBOT_ENABLED:
-         printf ("Robot enabled\n");
+      case DS_ROBOT_ENABLED_CHANGED:
+         printf ("Robot enabled: %d\n", event.robot.enabled);
          break;
-      case DS_ROBOT_DISABLED:
-         printf ("Robot disabled\n");
-         break;
-      case DS_ROBOT_CONNECTED:
-         printf ("Connected to robot\n");
-         break;
-      case DS_ROBOT_DISCONNECTED:
-         printf ("Disconnected to robot\n");
+      case DS_ROBOT_COMMS_CHANGED:
+         printf ("Robot comms: %d\n", event.robot.connected);
          break;
       case DS_ROBOT_VOLTAGE_CHANGED:
-         printf ("Robot voltage set to: %f\n", event.robot.voltage);
+         printf ("Robot voltage: %.2f\n", event.robot.voltage);
+         break;
+      case DS_ROBOT_BROWNOUT_CHANGED:
+         printf ("Robot brownout: %d\n", event.robot.brownout);
+         break;
+      case DS_MATCH_NUMBER_CHANGED:
+         printf ("Match number: %d\n", event.robot.match_number);
+         break;
+      case DS_NETCONSOLE_NEW_MESSAGE:
+         printf ("Console: %s\n", event.netconsole.message);
          break;
       default:
          break;

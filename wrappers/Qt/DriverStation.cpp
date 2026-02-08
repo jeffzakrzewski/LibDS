@@ -258,6 +258,30 @@ bool DriverStation::emergencyStopped() const
 }
 
 /**
+ * Returns \c true if the robot is in a brownout condition
+ */
+bool DriverStation::robotBrownout() const
+{
+   return DS_GetRobotBrownout();
+}
+
+/**
+ * Returns the current match number from FMS
+ */
+int DriverStation::matchNumber() const
+{
+   return DS_GetMatchNumber();
+}
+
+/**
+ * Returns the remaining match time in seconds
+ */
+float DriverStation::matchTime() const
+{
+   return DS_GetMatchTime();
+}
+
+/**
  * Returns the current voltage reported by the robot and the loaded protocol
  */
 qreal DriverStation::voltage() const
@@ -582,6 +606,7 @@ QStringList DriverStation::protocols() const
 {
    QStringList list;
 
+   list.append(tr("FRC 2026"));
    list.append(tr("FRC 2020"));
    list.append(tr("FRC 2016"));
    list.append(tr("FRC 2015"));
@@ -825,6 +850,11 @@ void DriverStation::setProtocol(const Protocol protocol)
       case Protocol2020:
          loadProtocol(DS_GetProtocolFRC_2020());
          LOG << "Switched to FRC 2020 Protocol";
+         break;
+      case Protocol2026:
+         loadProtocol(DS_GetProtocolFRC_2026());
+         LOG << "Switched to FRC 2026 Protocol";
+         break;
       default:
          break;
    }
@@ -1099,6 +1129,15 @@ void DriverStation::processEvents()
             break;
          case DS_STATUS_STRING_CHANGED:
             emit statusChanged(QString::fromUtf8(DS_GetStatusString()));
+            break;
+         case DS_ROBOT_BROWNOUT_CHANGED:
+            emit brownoutChanged(event.robot.brownout);
+            break;
+         case DS_MATCH_NUMBER_CHANGED:
+            emit matchNumberChanged(event.robot.match_number);
+            break;
+         case DS_MATCH_TIME_CHANGED:
+            emit matchTimeChanged(event.robot.match_time);
             break;
          default:
             break;

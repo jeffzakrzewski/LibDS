@@ -380,6 +380,30 @@ float DS_GetMaximumBatteryVoltage(void)
 }
 
 /**
+ * Returns \c 1 if the robot is in a brownout condition
+ */
+int DS_GetRobotBrownout(void)
+{
+   return CFG_GetRobotBrownout();
+}
+
+/**
+ * Returns the current match number from FMS
+ */
+int DS_GetMatchNumber(void)
+{
+   return CFG_GetMatchNumber();
+}
+
+/**
+ * Returns the remaining match time in seconds
+ */
+float DS_GetMatchTime(void)
+{
+   return CFG_GetMatchTime();
+}
+
+/**
  * Instructs the current protocol to reboot the robot
  */
 void DS_RebootRobot(void)
